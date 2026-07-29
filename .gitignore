@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Word temporary files
+~$*
+
+# C/C++ build files
+*.o
+*.out
+*.dSYM/
+a.out
+*.exe
+
+# VSCode settings
+.vscode/
