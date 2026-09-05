@@ -4,7 +4,7 @@ This repository records my CS learning process as a student at USTC.
 
 ## 个人笔记
 
-My notes, including C and computer fundamentals, Wen Kai's OOP course at ZJU, and thoughts and experiences I've collected while solving LeetCode problems.
+My notes, including C and computer fundamentals, Weng Kai's OOP course at ZJU, and thoughts and experiences I've collected while solving LeetCode problems.
 
 To be honest, I'm still wondering how to organize these notes.
 
