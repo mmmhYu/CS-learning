@@ -12,13 +12,8 @@ int akm(int m,int n){
 
 int main(void)
 {
-    printf("akm(0, 0) = %d\n", akm(1, 2));
-    printf("akm(0, 5) = %d\n", akm(0, 5));
-    printf("akm(1, 0) = %d\n", akm(1, 0));
-    printf("akm(1, 5) = %d\n", akm(1, 5));
-    printf("akm(2, 0) = %d\n", akm(2, 0));
-    printf("akm(2, 3) = %d\n", akm(2, 3));
-    printf("akm(3, 2) = %d\n", akm(3, 2));
+    printf("1\n");
+    printf("akm(4,2) = %d\n", akm(4,2));
 
     return 0;
 }
