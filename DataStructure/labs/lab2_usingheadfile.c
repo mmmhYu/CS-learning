@@ -1,6 +1,22 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+typedef struct{
+    int enter_time,duration;
+}Customer;
+
+
+typedef struct{
+    int occur_time,event_type;//event_type:0-Departure; [1,qNum]-Arrival&Counter
+}Event;
+
+#define qtype Customer
+#define ltype Event
+#define EvtNode LNode
+
+#include"../homework/SqQueue.h"
+#include"../homework/LinkList.h"
+
 #define qNum 3
 #define MAXQSIZE 100
 #define MAX_TIME 200
@@ -13,17 +29,7 @@
 #define OVERFLOW -2
 typedef int Status;
 
-typedef struct{
-    int enter_time,duration,index;
-}Customer;
-#define qtype Customer
-
-typedef struct{
-    int occur_time,event_type;//event_type:0-Departure; [1,qNum]-Arrival&Counter
-}Event;
-#define ltype Event
-
-typedef struct EventNode{
+/*typedef struct EventNode{
     Event evt;
     struct EventNode *next;
 }EventNode,*EventList;
@@ -36,36 +42,37 @@ typedef struct{
     int front,rear;
 }CustomerQueue,*Counter;
 
-#define SqQueue CustomerQueue
+#define SqQueue CustomerQueue*/
 
 //全局变量
-EventList evtList;
-Counter Counters;
+LinkList EventList;
+SqQueue* Counters;
 int cNum = 0;
+int OpenTime = 3600;
 
 void OpenForDay(){
     printf("--------开始营业--------");
 
     //初始化队列和链表
-    Counters = (CustomerQueue*)malloc((qNum+1) * sizeof(CustomerQueue));
+    Counters = (SqQueue*)malloc((qNum+1) * sizeof(SqQueue));
     for(int i = 1; i < 4; i++){
-        CustomerQueue cq = Counters[i];
+        SqQueue cq = Counters[i];
         cq.base = (Customer*)malloc(sizeof(Customer));
         cq.front = cq.rear = 0;
     }
 
-    evtList = (EventNode*)malloc(sizeof(EventNode));
-    evtList->next = NULL;
+    EventList = (LNode*)malloc(sizeof(LNode));
+    EventList->next = NULL;
 }
 
 Status MoreEvent(){
-    return evtList->next;
+    return EventList->next;
 }
 
 //将第一个事件从链表中拿出来
 Status GetEvent(Event *evt){
-    *evt = evtList->next->evt;
-    evtList->next = evtList->next->next;
+    *evt = EventList->next->val;
+    EventList->next = EventList->next->next;
     return OK;
 }
 
@@ -73,39 +80,53 @@ int ShortestLength(){
     int min = 1;
 
     for(int i = 2; i <= qNum; i++){
-        if((Counters[i].rear - Counters[i].front + MAXQSIZE) % MAXQSIZE 
-        < (Counters[min].rear - Counters[min].front + MAXQSIZE) % MAXQSIZE)
+        if(QueueLenth(Counters[i]) < QueueLenth(Counters[min]))
             min = i;
     }
 
     return min;
 }
 
-Status QueueEmpty(SqQueue q){
-    return q.front == q.rear;
-}
-
-Status EnQueue(SqQueue *q, qtype e){
-    // rear 再向前一步就碰到 front，说明队满
-    if((q->rear + 1) % MAXQSIZE == q->front)
+//按时间顺序插入事件
+//如果进入的时间超过营业时间，不会插入；但如果是离开时间超过，允许插入
+Status EventInsert(Event evt){
+    if(evt.event_type && evt.occur_time > OpenTime)
         return ERROR;
 
-    q->base[q->rear] = e;
-    q->rear = (q->rear + 1) % MAXQSIZE;
+    EvtNode *eNode = (EvtNode*)malloc(sizeof(EvtNode));
+    eNode->val = evt;
 
+    EvtNode *p = EventList->next, *pre = EventList;
+    while(p && p->val.occur_time <= evt.occur_time){
+        pre = p;
+        p = p->next;
+    }
+    
+    eNode->next = p; 
+    pre->next = eNode;
+    
     return OK;
 }
 
 //处理这个顾客排到哪，如果是第一个还要计算departure
 //处理之后，计算下一个Arrival Time，插入事件链表
 void CustomerArrival(int time,int type){
-
+    Customer c;
     int duration = rand() % 61 + 60;
-    
+    c.duration = duration;
+    c.enter_time = time;
 
-    //Counters[type].base[Counters[type].rear++] =  
+    if(QueueEmpty(Counters[type])){
+        int Depart_time = time + c.duration;
+        Event evt;
+        evt.event_type = 0;
+        evt.occur_time = Depart_time;
+        EventInsert(evt);
+    }
 
-    if(QueueEmpty(Counters[type])){}
+    EnQueue(&Counters[type],c);
+
+    //计算下一个进入事件的时间
 
 }
 

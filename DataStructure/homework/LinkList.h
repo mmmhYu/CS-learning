@@ -1,7 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-#define Elemtype int
+#ifndef ltype
+    #define ltype int
+#endif
+
 #define FALSE 0
 #define TRUE 1
 #define OK 1
@@ -11,12 +14,12 @@
 #define errV 114514
 typedef int Status;
 
-int equal(Elemtype a,Elemtype b){
+/*int equal(ltype a,ltype b){
     return a == b;
-}
+}*/
 
 typedef struct LNode{
-    Elemtype val;
+    ltype val;
     struct LNode* next;
 }LNode,*LinkList;
 
@@ -68,7 +71,7 @@ int ListLen(LinkList L){
     return i;
 }
 
-Elemtype GetElem(LinkList L, int k){
+/*ltype GetElem(LinkList L, int k){
     if(!L || k <= 0)
         return errV;
 
@@ -84,9 +87,9 @@ Elemtype GetElem(LinkList L, int k){
         return errV;
     else
         return p->val;
-}
+}*/
 
-Status InsertElem(LinkList L, int k, Elemtype e){
+Status InsertElem(LinkList L, int k, ltype e){
     if(!L || k <= 0)
         return ERROR;
 
@@ -131,7 +134,7 @@ Status ListDelete(LinkList L,int k){
     return OK;
 }
 
-int LocateElem(LinkList L,Elemtype e,int (*equal)(Elemtype,Elemtype)){
+int LocateElem(LinkList L,ltype e,int (*equal)(ltype,ltype)){
     if(!L)
         return -1;
 
@@ -146,7 +149,7 @@ int LocateElem(LinkList L,Elemtype e,int (*equal)(Elemtype,Elemtype)){
     return p ? i : 0;
 }
 
-Elemtype PrevElem(LinkList L,Elemtype e){
+/*ltype PrevElem(LinkList L,ltype e){
     if((!L) || (!L->next) || L->next->val == e)
         return errV;
 
@@ -157,9 +160,9 @@ Elemtype PrevElem(LinkList L,Elemtype e){
     }
 
     return p ? pre->val : errV;
-}
+}*/
 
-Elemtype NextElem(LinkList L,Elemtype e){
+/*ltype NextElem(LinkList L,ltype e){
     if((!L) || (!L->next))
         return errV;
 
@@ -168,7 +171,7 @@ Elemtype NextElem(LinkList L,Elemtype e){
         p = p->next;
 
     return p && p->next ? p->next->val : errV;
-}
+}*/
 
 void print_List(LinkList L){
     if(!L)

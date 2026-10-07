@@ -1,7 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-#define Elemtype char
+#ifndef stype
+    #define stype int
+#endif
+
 #define FALSE 0
 #define TRUE 1
 #define OK 1
@@ -14,14 +17,14 @@ typedef int Status;
 #define Init_Size 8
 
 typedef struct{
-    Elemtype *base;
-    Elemtype *top;
+    stype *base;
+    stype *top;
     int size;
 }SqStack;
 
 void InitStack(SqStack* s){
 
-    if(!(s->base = (Elemtype*)malloc(Init_Size*sizeof(Elemtype))))
+    if(!(s->base = (stype*)malloc(Init_Size*sizeof(stype))))
         exit(OVERFLOW);
 
     s->top = s->base;
@@ -53,16 +56,14 @@ size_t StackLen(SqStack s){
     return s.top - s.base;
 }
 
-Elemtype GetTop(SqStack s){
+stype GetTop(SqStack s){
     if(!StackEmpty(s))
         return *(s.top-1);
-    else
-        return ERROR;
 }
 
-Status Push(SqStack* s,Elemtype e){
+Status Push(SqStack* s,stype e){
     if(StackLen(*s) == s->size){
-        s->base = (Elemtype*)realloc(s->base,s->size*2*sizeof(Elemtype));
+        s->base = (stype*)realloc(s->base,s->size*2*sizeof(stype));
         s->top = s->base + s->size;
         s->size *= 2;
     }
@@ -72,7 +73,7 @@ Status Push(SqStack* s,Elemtype e){
     return OK;
 }
 
-Status Pop(SqStack* s,Elemtype* e){
+Status Pop(SqStack* s,stype* e){
     if(StackEmpty(*s))
         return ERROR;
 
